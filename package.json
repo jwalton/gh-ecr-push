@@ -1,0 +1,30 @@
+{
+  "name": "gh-ecr-login",
+  "version": "1.0.0",
+  "description": "Publish docker images to Amazon Elastic Container Registry (ECR).",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jwalton/gh-ecr-login.git"
+  },
+  "keywords": [
+    "github",
+    "actions",
+    "github actions",
+    "ecr",
+    "aws",
+    "amazon"
+  ],
+  "author": "Jason Walton",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jwalton/gh-ecr-login/issues"
+  },
+  "homepage": "https://github.com/jwalton/gh-ecr-login#readme",
+  "dependencies": {
+    "@actions/core": "^1.1.0"
+  }
+}

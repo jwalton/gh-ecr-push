@@ -1,0 +1,27 @@
+name: Push/Pull to Amazon ECR
+author: jwalton
+description: Push a docker image to Amazon ECR.
+inputs:
+  access-key-id:
+    description: Access key for IAM User.
+  secret-access-key:
+    description: Secret access key for IAM User.
+  image:
+    description: The image to push.  This is the name of the image on ECR.
+  local-image:
+    description: |
+      The local name of the image.  If not specified, assumed to be the same as
+      'image'.
+    required: false
+  region:
+    description: AWS Region to use.
+    required: false
+  direction:
+    description: Whether to push or pull the image.  Defaults to "push".
+    required: false
+runs:
+  using: node12
+  main: 'main.js'
+branding:
+  icon: upload
+  color: orange
