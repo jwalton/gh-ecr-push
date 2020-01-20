@@ -23,7 +23,7 @@ to your GitHub project:
 
 ## login
 
-Push an image to ECR (image:tag way):
+Push an image to ECR:
 
 ```yaml
 - run: docker build --tag my-image:v1 .
