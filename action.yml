@@ -17,6 +17,9 @@ inputs:
   direction:
     description: Whether to "push" or "pull" the image.  Defaults to "push".
     required: false
+  semver:
+    description: Using X.Y.Z version will push X, X.Y and X.Y.Z image tags 
+    required: false
 runs:
   using: node12
   main: 'main.js'

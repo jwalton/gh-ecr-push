@@ -19,10 +19,11 @@ to your GitHub project:
 - `secret-access-key` - Your IAM user's AWS secret key.
 - `image` - The image to upload. e.g. "myimage:v1.2.0".
 - `region` - The ECR region to upload to. Defaults to 'us-east-1'.
+- `semver` - The semantic version for your image. It will push X, X.Y and X.Y.Z tags. You can't use along with image:tag format. Defaults to ''.
 
 ## login
 
-Push an image to ECR:
+Push an image to ECR (image:tag way):
 
 ```yaml
 - run: docker build --tag my-image:v1 .
@@ -49,6 +50,21 @@ Push the local image 'my-image' to ECR as 'my-image:dev-XXXXX':
     region: us-east-1
     local-image: my-image
     image: my-image:dev-${{ github.sha }}
+```
+
+Push an image to ECR (semver way):
+
+```yaml
+- run: docker build --tag my-image:v1 .
+- name: Push to ECR
+  id: ecr
+  uses: jwalton/gh-ecr-push@v1
+  with:
+    access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    region: us-east-1
+    image: my-image
+    semver: 1.2.3 # will push my-image:1, my-image:1.2 and my-image:1.2.3
 ```
 
 Pull an image from ECR:
