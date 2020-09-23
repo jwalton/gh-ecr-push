@@ -15,8 +15,12 @@ inputs:
     description: AWS Region to use.  Defaults to us-east-1.
     required: false
   direction:
-    description: Whether to "push" or "pull" the image.  Defaults to "push".
+    description: Whether to "push" or "pull" the image. Defaults to "push".
     required: false
+  is-semver:
+    description: Specifies if the image follows the semantic versioning standard. It will push X, X.Y and X.Y.Z tags. Defaults to false.
+    required: false
+    defaults: false
 runs:
   using: node12
   main: 'main.js'
