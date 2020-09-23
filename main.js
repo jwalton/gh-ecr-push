@@ -27,6 +27,8 @@ run(`$(aws ecr get-login --no-include-email --region ${awsRegion})`);
 
 const accountData = run(`aws sts get-caller-identity --output json`);
 const awsAccountId = JSON.parse(accountData).Account;
+const imageUrl = `https://${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com/${image}`;
+core.setOutput('imageUrl', imageUrl);
 
 if (direction === 'push') {
     console.log(`Pushing local image ${localImage} to ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com/${image}`);

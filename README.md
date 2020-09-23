@@ -4,7 +4,7 @@ Push an image to, or pull an image from Amazon's Elastic Container Registry.
 
 See also [Login to Amazon ECR Action](https://github.com/jwalton/gh-ecr-login).
 
-## setup
+## Setup
 
 To set this up, create a new IAM user with access to ECR (e.g. with the
 AmazonEC2ContainerRegistryFullAccess policy). Then, add the following secrets
@@ -13,14 +13,18 @@ to your GitHub project:
 - `AWS_ACCESS_KEY_ID`
 - `AWS_SECRET_ACCESS_KEY`
 
-## inputs
+## Inputs
 
 - `access-key-id` - Your IAM user's AWS access key ID.
 - `secret-access-key` - Your IAM user's AWS secret key.
 - `image` - The image to upload. e.g. "myimage:v1.2.0".
 - `region` - The ECR region to upload to. Defaults to 'us-east-1'.
 
-## login
+## Outputs
+
+ - `imageUrl` - The URL of the image that was pushed/pulled.
+
+## Login
 
 Push an image to ECR:
 
