@@ -7,7 +7,7 @@ See also [Login to Amazon ECR Action](https://github.com/jwalton/gh-ecr-login).
 ## setup
 
 To set this up, create a new IAM user with access to ECR (e.g. with the
-AmazonEC2ContainerRegistryFullAccess policy). Then, add the following secrets
+AmazonEC2ContainerRegistryPowerUser policy). Then, add the following secrets
 to your GitHub project:
 
 - `AWS_ACCESS_KEY_ID`
