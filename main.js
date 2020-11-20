@@ -24,7 +24,7 @@ function run(cmd, options = {}) {
     });
 }
 
-const accountLoginPassword = run(`aws ecr get-login-password`)
+const accountLoginPassword = run(`aws ecr get-login-password`);
 const accountData = run(`aws sts get-caller-identity --output json`);
 const awsAccountId = JSON.parse(accountData).Account;
 
