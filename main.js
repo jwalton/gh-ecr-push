@@ -27,7 +27,7 @@ function run(cmd, options = {}) {
 const accountData = run(`aws sts get-caller-identity --output json`);
 const awsAccountId = JSON.parse(accountData).Account;
 
-run(`$(echo aws ecr get-login-password | docker login --password-stdin --username AWS ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com)`);
+run(`$(aws ecr get-login-password | docker login --password-stdin --username AWS ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com)`);
 
 if (direction === 'push') {
     if (!isSemver) {
