@@ -28,7 +28,7 @@ const accountLoginPassword = run(`aws ecr get-login-password`);
 const accountData = run(`aws sts get-caller-identity --output json`);
 const awsAccountId = JSON.parse(accountData).Account;
 
-run(`$(docker login --username AWS ${accountLoginPassword} ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com)`);
+run(`$(docker login --username AWS -p ${accountLoginPassword} ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com)`);
 
 if (direction === 'push') {
     if (!isSemver) {
