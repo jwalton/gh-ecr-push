@@ -24,11 +24,11 @@ function run(cmd, options = {}) {
     });
 }
 
-const accountLoginPassword = run(`aws ecr get-login-password`).replace(/\n/g, '');
+const accountLoginPassword = `aws ecr get-login-password --region ${awsRegion}`;
 const accountData = run(`aws sts get-caller-identity --output json`);
 const awsAccountId = JSON.parse(accountData).Account;
 
-run(`$(docker login --username AWS -p ${accountLoginPassword} ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com)`);
+run(`${accountLoginPassword} | docker login --username AWS --password-stdin ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com`);
 
 if (direction === 'push') {
     if (!isSemver) {
