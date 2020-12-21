@@ -24,12 +24,13 @@ function run(cmd, options = {}) {
     });
 }
 
-run(`$(aws ecr get-login --no-include-email --region ${awsRegion})`);
-
+const accountLoginPassword = `aws ecr get-login-password --region ${awsRegion}`;
 const accountData = run(`aws sts get-caller-identity --output json`);
 const awsAccountId = JSON.parse(accountData).Account;
 const imageUrl = `https://${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com/${image}`;
 core.setOutput('imageUrl', imageUrl);
+
+run(`${accountLoginPassword} | docker login --username AWS --password-stdin ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com`);
 
 if (direction === 'push') {
     if (!isSemver) {
