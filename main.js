@@ -18,6 +18,7 @@ function run(cmd, options = {}) {
         encoding: 'utf-8',
         env: {
             ...process.env,
+            AWS_PAGER: '', // Disable the pager.
             AWS_ACCESS_KEY_ID,
             AWS_SECRET_ACCESS_KEY,
         },
@@ -25,7 +26,7 @@ function run(cmd, options = {}) {
 }
 
 const accountLoginPassword = `aws ecr get-login-password --region ${awsRegion}`;
-const accountData = run(`aws sts get-caller-identity --output json`);
+const accountData = run(`aws sts get-caller-identity --output json --region ${awsRegion}`);
 const awsAccountId = JSON.parse(accountData).Account;
 const imageUrl = `https://${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com/${image}`;
 core.setOutput('imageUrl', imageUrl);
