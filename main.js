@@ -1,5 +1,6 @@
 const { execSync } = require('child_process');
 const core = require('@actions/core');
+const { getImagesToPush } = require('./images.js');
 
 const AWS_ACCESS_KEY_ID = core.getInput('access-key-id', { required: true });
 const AWS_SECRET_ACCESS_KEY = core.getInput('secret-access-key', { required: true });
@@ -28,33 +29,41 @@ function run(cmd, options = {}) {
 const accountLoginPassword = `aws ecr get-login-password --region ${awsRegion}`;
 const accountData = run(`aws sts get-caller-identity --output json --region ${awsRegion}`);
 const awsAccountId = JSON.parse(accountData).Account;
-const imageUrl = `https://${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com/${image}`;
-core.setOutput('imageUrl', imageUrl);
 
-run(`${accountLoginPassword} | docker login --username AWS --password-stdin ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com`);
+let imageUrl;
+
+run(
+    `${accountLoginPassword} | docker login --username AWS --password-stdin ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com`
+);
+
+if (localImage.includes(',')) {
+    if (!core.getInput('local-image')) {
+        throw new Error('local-image must be specified if image is a list.');
+    } else {
+        throw new Error('local-image may not be a list of images.');
+    }
+}
 
 if (direction === 'push') {
-    if (!isSemver) {
-        console.log(`Pushing local image ${localImage} to ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com/${image}`);
-        run(`docker tag ${localImage} ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com/${image}`);
-        run(`docker push ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com/${image}`);
-    } else {
-        const semverArray = localImage.split(':')[1].split('.');
-        const versions = semverArray.map((number, index) =>
-            semverArray.slice(0, index + 1).join('.')
-        );
-        const imageWithoutTag = image.split(':')[0]
-        versions.forEach(tag => {
-            const uri = `${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com/${imageWithoutTag}:${tag}`;
-            console.log(`Pushing ${uri}`);
-            run(`docker tag ${localImage} ${uri}`);
-            run(`docker push ${uri}`);
-        });
+    const imagesToPush = getImagesToPush(localImage, image, isSemver);
+    for (const imageToPush of imagesToPush) {
+        const uri = `${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com/${imageToPush.remoteImage}`;
+        console.log(`Pushing local image ${imageToPush.localImage} to ${uri}`);
+        run(`docker tag ${imageToPush.localImage} ${uri}`);
+        run(`docker push ${uri}`);
+        imageUrl = uri;
     }
 } else if (direction == 'pull') {
-    console.log("Pulling ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com/${image} to ${localImage}");
-    run(`docker pull ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com/${image}`);
-    run(`docker tag ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com/${image} ${localImage} `);
+    if (image.includes(',')) {
+        throw new Error('image may not be a list of images when pulling');
+    }
+    const uri = `${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com/${image}`;
+    console.log(`Pulling ${uri} to ${localImage}`);
+    run(`docker pull ${uri}`);
+    run(`docker tag ${uri} ${localImage} `);
+    imageUrl = uri;
 } else {
     throw new Error(`Unknown direction ${direction}`);
 }
+
+core.setOutput('imageUrl', imageUrl);

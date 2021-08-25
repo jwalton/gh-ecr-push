@@ -17,13 +17,14 @@ to your GitHub project:
 
 - `access-key-id` - Your IAM user's AWS access key ID.
 - `secret-access-key` - Your IAM user's AWS secret key.
-- `image` - The image to upload. e.g. "myimage:v1.2.0".
+- `image` - The remote image to push or pull. e.g. "myimage:v1.2.0".  If you are pushing, this can be a list of images, separated by commas e.g. "myimage:v1.2.0, myimage:latest".
+- `local-image` - The name of the local image to push (or to pull to).  If this is not specified, it will default to the same as `image`.  Note that if `image` is an array of images, this must be specified as this cannot be a list.
 - `region` - The ECR region to upload to. Defaults to 'us-east-1'.
-- `is-semver` - Specifies if the image follows the semantic versioning standard. It will push X, X.Y and X.Y.Z tags. Defaults to false.
+- `is-semver` - Specifies if the image follows the semantic versioning standard. It will push X, X.Y and X.Y.Z tags. Defaults to false.  Note that if this is true, the semver numbers come from the `local-image`.  If `image` is a list, the tags from each image will be discarded.
 
 ## Outputs
 
- - `imageUrl` - The URL of the image that was pushed/pulled.
+- `imageUrl` - The URL of the image that was pushed/pulled.  If multiple images were pushed, this will be the URL of the first image that was pushed.
 
 ## Login
 
@@ -39,6 +40,21 @@ Push an image to ECR:
     secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     region: us-east-1
     image: my-image:v1
+```
+
+Push a "latest" tag:
+
+```yaml
+- run: docker build --tag my-image:v1 .
+- name: Push to ECR
+  id: ecr
+  uses: jwalton/gh-ecr-push@v1
+  with:
+    access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    region: us-east-1
+    local-image: my-image:v1
+    image: my-image:v1, my-image:latest
 ```
 
 Push the local image 'my-image' to ECR as 'my-image:dev-XXXXX':
