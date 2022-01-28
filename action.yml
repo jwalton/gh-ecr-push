@@ -3,10 +3,13 @@ author: jwalton
 description: Push a docker image to (or pull from) Amazon ECR.
 inputs:
   access-key-id:
+    required: true
     description: Access key for IAM User.
   secret-access-key:
+    required: true
     description: Secret access key for IAM User.
   image:
+    required: true
     description: The name of the image on ECR.
   local-image:
     description: The local name of the image.  If not specified, defaults to same as 'image'.
@@ -20,7 +23,7 @@ inputs:
   is-semver:
     description: Specifies if the image follows the semantic versioning standard. It will push X, X.Y and X.Y.Z tags. Defaults to false.
     required: false
-    defaults: false
+    default: "false"
 runs:
   using: node12
   main: 'main.js'
