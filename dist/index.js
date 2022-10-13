@@ -79,6 +79,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(186));
 const images_1 = __nccwpck_require__(246);
 const utils_1 = __nccwpck_require__(918);
+const gh_ecr_login_1 = __nccwpck_require__(895);
 const AWS_ACCESS_KEY_ID = core.getInput('access-key-id', { required: true });
 const AWS_SECRET_ACCESS_KEY = core.getInput('secret-access-key', { required: true });
 const image = core.getInput('image', { required: true });
@@ -86,7 +87,7 @@ const localImage = core.getInput('local-image') || image;
 const awsRegion = core.getInput('region') || process.env.AWS_DEFAULT_REGION || 'us-east-1';
 const direction = core.getInput('direction') || 'push';
 const isSemver = !!core.getInput('is-semver');
-const { awsAccountId } = (0, utils_1.loginToEcr)(awsRegion, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
+const { awsAccountId } = (0, gh_ecr_login_1.loginToEcr)(awsRegion, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
 let imageUrl;
 if (localImage.includes(',')) {
     if (!core.getInput('local-image')) {
@@ -130,7 +131,7 @@ core.setOutput('imageUrl', imageUrl);
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.loginToEcr = exports.run = void 0;
+exports.run = void 0;
 const child_process_1 = __nccwpck_require__(81);
 function run(cmd, options = {}) {
     if (!options.hide) {
@@ -143,21 +144,6 @@ function run(cmd, options = {}) {
     });
 }
 exports.run = run;
-function loginToEcr(awsRegion, awsAccessKeyId, awsSecretAccessKey) {
-    const env = {
-        AWS_PAGER: '',
-        AWS_ACCESS_KEY_ID: awsAccessKeyId,
-        AWS_SECRET_ACCESS_KEY: awsSecretAccessKey,
-    };
-    const accountData = run(`aws sts get-caller-identity --output json --region ${awsRegion}`, {
-        env,
-    });
-    const awsAccountId = JSON.parse(accountData).Account;
-    const accountLoginPasswordCmd = `aws ecr get-login-password --region ${awsRegion}`;
-    run(`${accountLoginPasswordCmd} | docker login --username AWS --password-stdin ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com`, { env });
-    return { awsAccountId };
-}
-exports.loginToEcr = loginToEcr;
 
 
 /***/ }),
@@ -1920,6 +1906,43 @@ function checkBypass(reqUrl) {
 }
 exports.checkBypass = checkBypass;
 //# sourceMappingURL=proxy.js.map
+
+/***/ }),
+
+/***/ 895:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.loginToEcr = void 0;
+const child_process_1 = __nccwpck_require__(81);
+function run(cmd, options = {}) {
+    if (!options.hide) {
+        console.log(`$ ${cmd}`);
+    }
+    return (0, child_process_1.execSync)(cmd, {
+        shell: '/bin/bash',
+        encoding: 'utf-8',
+        env: Object.assign(Object.assign({}, process.env), options.env),
+    });
+}
+function loginToEcr(awsRegion, awsAccessKeyId, awsSecretAccessKey) {
+    const env = {
+        AWS_PAGER: '',
+        AWS_ACCESS_KEY_ID: awsAccessKeyId,
+        AWS_SECRET_ACCESS_KEY: awsSecretAccessKey,
+    };
+    const accountData = run(`aws sts get-caller-identity --output json --region ${awsRegion}`, {
+        env,
+    });
+    const awsAccountId = JSON.parse(accountData).Account;
+    const accountLoginPasswordCmd = `aws ecr get-login-password --region ${awsRegion}`;
+    run(`${accountLoginPasswordCmd} | docker login --username AWS --password-stdin ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com`, { env });
+    return { awsAccountId };
+}
+exports.loginToEcr = loginToEcr;
+//# sourceMappingURL=lib.js.map
 
 /***/ }),
 
