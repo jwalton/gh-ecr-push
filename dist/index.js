@@ -52,24 +52,44 @@ exports.getImagesToPush = getImagesToPush;
 
 "use strict";
 
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core_1 = __importDefault(__nccwpck_require__(186));
+const core = __importStar(__nccwpck_require__(186));
 const images_1 = __nccwpck_require__(246);
 const utils_1 = __nccwpck_require__(918);
-const AWS_ACCESS_KEY_ID = core_1.default.getInput('access-key-id', { required: true });
-const AWS_SECRET_ACCESS_KEY = core_1.default.getInput('secret-access-key', { required: true });
-const image = core_1.default.getInput('image', { required: true });
-const localImage = core_1.default.getInput('local-image') || image;
-const awsRegion = core_1.default.getInput('region') || process.env.AWS_DEFAULT_REGION || 'us-east-1';
-const direction = core_1.default.getInput('direction') || 'push';
-const isSemver = !!core_1.default.getInput('is-semver');
+const AWS_ACCESS_KEY_ID = core.getInput('access-key-id', { required: true });
+const AWS_SECRET_ACCESS_KEY = core.getInput('secret-access-key', { required: true });
+const image = core.getInput('image', { required: true });
+const localImage = core.getInput('local-image') || image;
+const awsRegion = core.getInput('region') || process.env.AWS_DEFAULT_REGION || 'us-east-1';
+const direction = core.getInput('direction') || 'push';
+const isSemver = !!core.getInput('is-semver');
 const { awsAccountId } = (0, utils_1.loginToEcr)(awsRegion, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
 let imageUrl;
 if (localImage.includes(',')) {
-    if (!core_1.default.getInput('local-image')) {
+    if (!core.getInput('local-image')) {
         throw new Error('local-image must be specified if image is a list.');
     }
     else {
@@ -99,7 +119,7 @@ else if (direction == 'pull') {
 else {
     throw new Error(`Unknown direction ${direction}`);
 }
-core_1.default.setOutput('imageUrl', imageUrl);
+core.setOutput('imageUrl', imageUrl);
 
 
 /***/ }),
