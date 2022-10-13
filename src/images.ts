@@ -1,14 +1,18 @@
 /**
  * Returns an array of images to push.
  *
- * @param {string} localImage - The name of the local image (e.g. my-image:1.2.3).
- * @param {string} remoteImage - The remote image to push, or a comma delimited list of images to push.
- * @param {boolean} isSemver - If true, we'll generate a list of images to push,
+ * @param localImage - The name of the local image (e.g. my-image:1.2.3).
+ * @param remoteImage - The remote image to push, or a comma delimited list of images to push.
+ * @param isSemver - If true, we'll generate a list of images to push,
  *   based on the semver found in the localImage.  FOr this to work, the localImage
  *   must have a semver style tag.
- * @returns {{localImage: string, remoteImage: string}[]} - An array of images to push.
+ * @returns - An array of images to push.
  */
-exports.getImagesToPush = function getImagesToPush(localImage, remoteImage, isSemver) {
+export function getImagesToPush(
+    localImage: string,
+    remoteImage: string,
+    isSemver: boolean,
+): { localImage: string; remoteImage: string }[] {
     const remoteImages = remoteImage.split(',').map((image) => image.trim());
     const result = [];
 
@@ -21,7 +25,7 @@ exports.getImagesToPush = function getImagesToPush(localImage, remoteImage, isSe
         } else {
             const semverArray = localImage.split(':')[1].split('.');
             const versions = semverArray.map((number, index) =>
-                semverArray.slice(0, index + 1).join('.')
+                semverArray.slice(0, index + 1).join('.'),
             );
             const imageWithoutTag = image.split(':')[0];
             versions.forEach((tag) => {
@@ -34,4 +38,4 @@ exports.getImagesToPush = function getImagesToPush(localImage, remoteImage, isSe
     }
 
     return result;
-};
+}

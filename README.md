@@ -1,5 +1,7 @@
 # Push/Pull to Amazon ECR Action
 
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+
 Push an image to, or pull an image from Amazon's Elastic Container Registry.
 
 See also [Login to Amazon ECR Action](https://github.com/jwalton/gh-ecr-login).
