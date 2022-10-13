@@ -24,8 +24,8 @@ inputs:
     description: Specifies if the image follows the semantic versioning standard. It will push X, X.Y and X.Y.Z tags. Defaults to false.
     required: false
 runs:
-  using: node12
-  main: 'main.js'
+  using: node16
+  main: 'dist/index.js'
 branding:
   icon: upload
   color: orange
