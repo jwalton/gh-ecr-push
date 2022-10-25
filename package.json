@@ -42,7 +42,7 @@
         "@types/jest": "^29.1.2",
         "@types/node": "^18.8.5",
         "@typescript-eslint/eslint-plugin": "^5.40.0",
-        "@typescript-eslint/parser": "^5.40.0",
+        "@typescript-eslint/parser": "^5.41.0",
         "@vercel/ncc": "^0.34.0",
         "chai": "^4.3.6",
         "eslint": "^8.25.0",
