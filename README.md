@@ -28,7 +28,7 @@ to your GitHub project:
 
 - `imageUrl` - The URL of the image that was pushed/pulled.  If multiple images were pushed, this will be the URL of the first image that was pushed.
 
-## Login
+## Examples
 
 Push an image to ECR:
 
