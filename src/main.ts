@@ -2,6 +2,8 @@ import * as core from '@actions/core';
 import { getImagesToPush } from './images';
 import { run } from './utils';
 import { loginToEcr } from 'gh-ecr-login';
+import { writeFileSync } from 'node:fs';
+import { EOL } from 'node:os';
 
 const AWS_ACCESS_KEY_ID = core.getInput('access-key-id', { required: true });
 const AWS_SECRET_ACCESS_KEY = core.getInput('secret-access-key', { required: true });
@@ -44,4 +46,4 @@ if (direction === 'push') {
     throw new Error(`Unknown direction ${direction}`);
 }
 
-core.setOutput('imageUrl', imageUrl);
+writeFileSync(process.env['GITHUB_STATE'], `imageUrl=${imageUrl}${EOL}`, { flag: 'a' });
