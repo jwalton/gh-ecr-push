@@ -80,6 +80,8 @@ const core = __importStar(__nccwpck_require__(186));
 const images_1 = __nccwpck_require__(246);
 const utils_1 = __nccwpck_require__(918);
 const gh_ecr_login_1 = __nccwpck_require__(895);
+const node_fs_1 = __nccwpck_require__(561);
+const node_os_1 = __nccwpck_require__(612);
 const AWS_ACCESS_KEY_ID = core.getInput('access-key-id', { required: true });
 const AWS_SECRET_ACCESS_KEY = core.getInput('secret-access-key', { required: true });
 const image = core.getInput('image', { required: true });
@@ -120,7 +122,7 @@ else if (direction == 'pull') {
 else {
     throw new Error(`Unknown direction ${direction}`);
 }
-core.setOutput('imageUrl', imageUrl);
+(0, node_fs_1.writeFileSync)(process.env['GITHUB_STATE'], `imageUrl=${imageUrl}${node_os_1.EOL}`, { flag: 'a' });
 
 
 /***/ }),
@@ -2933,6 +2935,22 @@ module.exports = require("https");
 
 "use strict";
 module.exports = require("net");
+
+/***/ }),
+
+/***/ 561:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("node:fs");
+
+/***/ }),
+
+/***/ 612:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("node:os");
 
 /***/ }),
 
