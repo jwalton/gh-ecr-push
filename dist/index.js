@@ -1820,47 +1820,6 @@ function isLoopbackAddress(host) {
 
 /***/ }),
 
-/***/ 3895:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-var __webpack_unused_export__;
-
-__webpack_unused_export__ = ({ value: true });
-exports.D = void 0;
-const child_process_1 = __nccwpck_require__(2081);
-function run(cmd, options = {}) {
-    if (!options.hide) {
-        console.log(`$ ${cmd}`);
-    }
-    return (0, child_process_1.execSync)(cmd, {
-        shell: '/bin/bash',
-        encoding: 'utf-8',
-        env: Object.assign(Object.assign({}, process.env), options.env),
-    });
-}
-function loginToEcr(awsRegion, awsAccessKeyId, awsSecretAccessKey) {
-    const env = {
-        AWS_PAGER: '', // Disable the pager.
-    };
-    if (awsAccessKeyId) {
-        env.AWS_ACCESS_KEY_ID = awsAccessKeyId;
-    }
-    if (awsSecretAccessKey) {
-        env.AWS_SECRET_ACCESS_KEY = awsSecretAccessKey;
-    }
-    const accountData = run(`aws sts get-caller-identity --output json --region ${awsRegion}`, {
-        env,
-    });
-    const awsAccountId = JSON.parse(accountData).Account;
-    const accountLoginPasswordCmd = `aws ecr get-login-password --region ${awsRegion}`;
-    run(`${accountLoginPasswordCmd} | docker login --username AWS --password-stdin ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com`, { env });
-    return { awsAccountId };
-}
-exports.D = loginToEcr;
-//# sourceMappingURL=lib.js.map
-
-/***/ }),
-
 /***/ 4294:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
@@ -24880,13 +24839,6 @@ module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("buffer");
 
 /***/ }),
 
-/***/ 2081:
-/***/ ((module) => {
-
-module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("child_process");
-
-/***/ }),
-
 /***/ 6206:
 /***/ ((module) => {
 
@@ -26719,8 +26671,42 @@ var __webpack_exports__ = {};
 
 // EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
 var core = __nccwpck_require__(2186);
-// EXTERNAL MODULE: ./node_modules/gh-ecr-login/lib/lib.js
-var lib = __nccwpck_require__(3895);
+;// CONCATENATED MODULE: external "child_process"
+const external_child_process_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("child_process");
+;// CONCATENATED MODULE: ./node_modules/gh-ecr-login/lib/lib.js
+
+function run(cmd, options = {}) {
+    if (!options.hide) {
+        console.log(`$ ${cmd}`);
+    }
+    return (0,external_child_process_namespaceObject.execSync)(cmd, {
+        shell: '/bin/bash',
+        encoding: 'utf-8',
+        env: {
+            ...process.env,
+            ...options.env,
+        },
+    });
+}
+function loginToEcr(awsRegion, awsAccessKeyId, awsSecretAccessKey) {
+    const env = {
+        AWS_PAGER: '', // Disable the pager.
+    };
+    if (awsAccessKeyId) {
+        env.AWS_ACCESS_KEY_ID = awsAccessKeyId;
+    }
+    if (awsSecretAccessKey) {
+        env.AWS_SECRET_ACCESS_KEY = awsSecretAccessKey;
+    }
+    const accountData = run(`aws sts get-caller-identity --output json --region ${awsRegion}`, {
+        env,
+    });
+    const awsAccountId = JSON.parse(accountData).Account;
+    const accountLoginPasswordCmd = `aws ecr get-login-password --region ${awsRegion}`;
+    run(`${accountLoginPasswordCmd} | docker login --username AWS --password-stdin ${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com`, { env });
+    return { awsAccountId };
+}
+//# sourceMappingURL=lib.js.map
 ;// CONCATENATED MODULE: ./lib/images.js
 /**
  * Returns an array of images to push.
@@ -26757,15 +26743,13 @@ function getImagesToPush(localImage, remoteImage, isSemver) {
     return result;
 }
 
-// EXTERNAL MODULE: external "child_process"
-var external_child_process_ = __nccwpck_require__(2081);
 ;// CONCATENATED MODULE: ./lib/utils.js
 
-function run(cmd, options = {}) {
+function utils_run(cmd, options = {}) {
     if (!options.hide) {
         console.log(`$ ${cmd}`);
     }
-    return (0,external_child_process_.execSync)(cmd, {
+    return (0,external_child_process_namespaceObject.execSync)(cmd, {
         shell: '/bin/bash',
         encoding: 'utf-8',
         env: {
@@ -26787,7 +26771,7 @@ const localImage = core.getInput('local-image') || main_image;
 const awsRegion = core.getInput('region') || process.env.AWS_DEFAULT_REGION || 'us-east-1';
 const direction = core.getInput('direction') || 'push';
 const isSemver = !!core.getInput('is-semver');
-const { awsAccountId } = (0,lib/* loginToEcr */.D)(awsRegion, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
+const { awsAccountId } = loginToEcr(awsRegion, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
 let imageUrl;
 if (localImage.includes(',')) {
     if (!core.getInput('local-image')) {
@@ -26802,8 +26786,8 @@ if (direction === 'push') {
     for (const imageToPush of imagesToPush) {
         const uri = `${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com/${imageToPush.remoteImage}`;
         console.log(`Pushing local image ${imageToPush.localImage} to ${uri}`);
-        run(`docker tag ${imageToPush.localImage} ${uri}`);
-        run(`docker push ${uri}`);
+        utils_run(`docker tag ${imageToPush.localImage} ${uri}`);
+        utils_run(`docker push ${uri}`);
         imageUrl = uri;
     }
 }
@@ -26813,8 +26797,8 @@ else if (direction == 'pull') {
     }
     const uri = `${awsAccountId}.dkr.ecr.${awsRegion}.amazonaws.com/${main_image}`;
     console.log(`Pulling ${uri} to ${localImage}`);
-    run(`docker pull ${uri}`);
-    run(`docker tag ${uri} ${localImage} `);
+    utils_run(`docker pull ${uri}`);
+    utils_run(`docker tag ${uri} ${localImage} `);
     imageUrl = uri;
 }
 else {
