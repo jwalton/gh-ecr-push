@@ -20,6 +20,8 @@ jobs:
           node-version: '20'
       - run: npm install
       - run: npm run all
+      - name: Verify dist does not need to be rebuilt
+        run: git add dist && git diff-index --quiet --cached HEAD --
       - name: Semantic-release
         if: github.ref == 'refs/heads/master'
         run: npm run semantic-release
