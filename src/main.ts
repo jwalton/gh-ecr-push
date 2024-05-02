@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
-import { getImagesToPush } from './images';
-import { run } from './utils';
 import { loginToEcr } from 'gh-ecr-login';
+import { getImagesToPush } from './images.js';
+import { run } from './utils.js';
 
 const AWS_ACCESS_KEY_ID = core.getInput('access-key-id', { required: true });
 const AWS_SECRET_ACCESS_KEY = core.getInput('secret-access-key', { required: true });

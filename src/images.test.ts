@@ -1,22 +1,7 @@
-/**
- * @jest-environment node
- */
-
-import chai from 'chai';
-import { getImagesToPush } from './images';
-
-const { expect } = chai;
+import { expect } from 'chai';
+import { getImagesToPush } from './images.js';
 
 describe('images', () => {
-    beforeEach(() => {
-        // TODO: Uncomment this if you're using `jest.spyOn()` to restore mocks between tests
-        // jest.restoreAllMocks();
-    });
-
-    it('should do the thing', () => {
-        // TODO
-    });
-
     it('should push an image', () => {
         const images = getImagesToPush('local:15.16.17', 'remote:15.16.17', false);
 
