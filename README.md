@@ -36,7 +36,7 @@ Push an image to ECR:
 - run: docker build --tag my-image:v1 .
 - name: Push to ECR
   id: ecr
-  uses: jwalton/gh-ecr-push@v1
+  uses: jwalton/gh-ecr-push@v2
   with:
     access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
     secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -50,7 +50,7 @@ Push a "latest" tag:
 - run: docker build --tag my-image:v1 .
 - name: Push to ECR
   id: ecr
-  uses: jwalton/gh-ecr-push@v1
+  uses: jwalton/gh-ecr-push@v2
   with:
     access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
     secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -65,7 +65,7 @@ Push the local image 'my-image' to ECR as 'my-image:dev-XXXXX':
 - run: docker build --tag my-image .
 - name: Push to ECR
   id: ecr
-  uses: jwalton/gh-ecr-push@v1
+  uses: jwalton/gh-ecr-push@v2
   with:
     access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
     secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -80,7 +80,7 @@ Push an image to ECR (semver way):
 - run: docker build --tag my-image:v1 .
 - name: Push to ECR
   id: ecr
-  uses: jwalton/gh-ecr-push@v1
+  uses: jwalton/gh-ecr-push@v2
   with:
     access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
     secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -94,7 +94,7 @@ Pull an image from ECR:
 ```yaml
 - name: Pull from ECR
   id: ecr
-  uses: jwalton/gh-ecr-push@v1
+  uses: jwalton/gh-ecr-push@v2
   with:
     access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
     secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
