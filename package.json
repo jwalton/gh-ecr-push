@@ -9,7 +9,7 @@
         "build": "tsc",
         "clean": "rm -rf lib dist",
         "format": "prettier --write \"**/*.ts\"",
-        "lint": "eslint src/**/*.ts",
+        "lint": "eslint src",
         "package": "ncc build --source-map --license licenses.txt",
         "all": "npm run format && npm run clean && npm run build && npm run lint && npm run package && npm test",
         "semantic-release": "semantic-release"
@@ -37,22 +37,22 @@
         "gh-ecr-login": "^2.0.4"
     },
     "devDependencies": {
+        "@eslint/js": "^9.1.1",
         "@semantic-release/exec": "^6.0.3",
         "@semantic-release/git": "^10.0.1",
         "@types/chai": "^4.3.3",
         "@types/mocha": "^10.0.6",
         "@types/node": "^20.12.8",
-        "@typescript-eslint/eslint-plugin": "^5.40.0",
-        "@typescript-eslint/parser": "^5.41.0",
         "@vercel/ncc": "^0.38.1",
         "chai": "^5.1.0",
-        "eslint": "^8.25.0",
-        "eslint-config-prettier": "^8.5.0",
+        "eslint": "^8.57.0",
+        "eslint-plugin-import": "^2.29.1",
         "mocha": "^10.4.0",
         "prettier": "^3.2.5",
         "semantic-release": "^23.0.8",
         "ts-node": "^10.9.2",
-        "typescript": "^5.4.5"
+        "typescript": "^5.4.5",
+        "typescript-eslint": "^7.8.0"
     },
     "volta": {
         "node": "20.12.2"

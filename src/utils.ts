@@ -1,6 +1,9 @@
 import { execSync } from 'child_process';
 
-export function run(cmd: string, options: { env?: Record<string, string>; hide?: boolean } = {}) {
+export function run(
+    cmd: string,
+    options: { env?: Record<string, string>; hide?: boolean } = {},
+): string {
     if (!options.hide) {
         console.log(`$ ${cmd}`);
     }
