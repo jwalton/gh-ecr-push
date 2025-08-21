@@ -3,8 +3,8 @@ import { loginToEcr } from 'gh-ecr-login';
 import { getImagesToPush } from './images.js';
 import { run } from './utils.js';
 
-const AWS_ACCESS_KEY_ID = core.getInput('access-key-id', { required: true });
-const AWS_SECRET_ACCESS_KEY = core.getInput('secret-access-key', { required: true });
+const AWS_ACCESS_KEY_ID = core.getInput('access-key-id');
+const AWS_SECRET_ACCESS_KEY = core.getInput('secret-access-key');
 const image = core.getInput('image', { required: true });
 const localImage = core.getInput('local-image') || image;
 const awsRegion = core.getInput('region') || process.env.AWS_DEFAULT_REGION || 'us-east-1';

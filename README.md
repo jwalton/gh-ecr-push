@@ -8,9 +8,9 @@ See also [Login to Amazon ECR Action](https://github.com/jwalton/gh-ecr-login).
 
 ## Setup
 
-To set this up, create a new IAM user with access to ECR (e.g. with the
-AmazonEC2ContainerRegistryPowerUser policy). Then, add the following secrets
-to your GitHub project:
+To set this up, you need some way to authenticate to AWS.  The best way to do this is to use [aws-actions/configure-aws-credentials](https://github.com/aws-actions/configure-aws-credentials) with OIDC.
+
+Alternatively, you can create a new IAM user with access to ECR (e.g. with the AmazonEC2ContainerRegistryPowerUser policy). Then, add the following secrets to your GitHub project:
 
 - `AWS_ACCESS_KEY_ID`
 - `AWS_SECRET_ACCESS_KEY`
@@ -34,12 +34,15 @@ Push an image to ECR:
 
 ```yaml
 - run: docker build --tag my-image:v1 .
+- name: Configure AWS Credentials
+  uses: aws-actions/configure-aws-credentials@v2
+  with:
+    role-to-assume: arn:aws:iam::123456789012:role/push-to-ecr
+    aws-region: us-west-2
 - name: Push to ECR
   id: ecr
   uses: jwalton/gh-ecr-push@v2
   with:
-    access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     region: us-east-1
     image: my-image:v1
 ```
@@ -59,7 +62,7 @@ Push a "latest" tag:
     image: my-image:v1, my-image:latest
 ```
 
-Push the local image 'my-image' to ECR as 'my-image:dev-XXXXX':
+Push the local image 'my-image' to ECR as 'my-image:dev-XXXXX', using an access key:
 
 ```yaml
 - run: docker build --tag my-image .

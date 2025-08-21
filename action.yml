@@ -3,10 +3,10 @@ author: jwalton
 description: Push a docker image to (or pull from) Amazon ECR.
 inputs:
   access-key-id:
-    required: true
+    required: false
     description: Access key for IAM User.
   secret-access-key:
-    required: true
+    required: false
     description: Secret access key for IAM User.
   image:
     required: true
